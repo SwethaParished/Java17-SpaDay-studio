@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
-
 @Controller
 public class SpaDayController {
 
@@ -24,10 +23,11 @@ public class SpaDayController {
         }
     }
 
+    // Bonus Mission 2 - Add 'both' option for manipedi
     @GetMapping(value="")
     @ResponseBody
     public String customerForm () {
-        String html = "<form method = 'post'>" +
+        String html = "<form action='/menu' method = 'post'>" +
                 "Name: <br>" +
                 "<input type = 'text' name = 'name'>" +
                 "<br>Skin type: <br>" +
@@ -41,13 +41,15 @@ public class SpaDayController {
                 "<select name = 'manipedi'>" +
                 "<option value = 'manicure'>Manicure</option>" +
                 "<option value = 'pedicure'>Pedicure</option>" +
+                "<option value = 'both'>Both</option>" +
                 "</select><br>" +
                 "<input type = 'submit' value = 'Submit'>" +
                 "</form>";
         return html;
     }
 
-    @PostMapping(value="")
+    // Bonus mission 3: change route from "" to "/menu"
+    @PostMapping(value="/menu")
     public String spaMenu(@RequestParam String name, @RequestParam String skintype, @RequestParam String manipedi, Model model) {
 
         ArrayList<String> facials = new ArrayList<>();
@@ -56,18 +58,28 @@ public class SpaDayController {
         facials.add("Rejuvenating");
         facials.add("Enzyme Peel");
 
-
-
         ArrayList<String> appropriateFacials = new ArrayList<>();
         for (int i = 0; i < facials.size(); i ++) {
             if (checkSkinType(skintype,facials.get(i))) {
                 appropriateFacials.add(facials.get(i));
             }
         }
+
         model.addAttribute("name", name);
         model.addAttribute("skintype", skintype);
         model.addAttribute("manipedi", manipedi);
         model.addAttribute("appropriateFacials", appropriateFacials);
+
+        // Bonus mission 1
+        ArrayList<String> polishChoices = new ArrayList<>();
+        polishChoices.add("#ed553e");
+        polishChoices.add("#ed3e4d");
+        polishChoices.add("#d12c71");
+        polishChoices.add("#a31787");
+        polishChoices.add("#34a39e");
+        polishChoices.add("#63c295");
+
+        model.addAttribute("polishChoices", polishChoices);
 
         return "menu";
     }
